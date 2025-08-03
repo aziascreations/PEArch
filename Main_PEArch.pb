@@ -1,24 +1,26 @@
 ﻿;{- Code Header
 ; ==- Basic Info -================================
 ;     Name: Main_PEArch.pb
-;  Version: 0.0.1
+;  Version: 1.1.x
 ;   Author: Herwin Bozet (NibblePoker)
 ;
 ; ==- Compatibility -=============================
 ;  Compiler version:
-;    * PureBasic 6.0 LTS
-;    * PureBasic 6.0 LTS - C Backend
+;    * PureBasic 5.73 LTS (x86/x64)
+;    * PureBasic 6.0 LTS (x64)
+;    * PureBasic 6.0 LTS - C Backend (x64)
 ; 
 ; ==- Links & License -===========================
-;  License: Unlicense
-;  GitHub: ???
+;  License: CC0 1.0 Universal (Public Domain)
+;  GitHub: https://github.com/aziascreations/PB-PEArch
 ;}
+
 
 ;- Compiler directive
 EnableExplicit
 
 XIncludeFile "./Includes/ImageNtHeaderHelper.pbi"
-XIncludeFile "./Includes/WinApi_GetConsoleProcessList.pbi"
+XIncludeFile "./Includes/PB-Win32-GetConsoleProcessList/Includes/Win32_GetConsoleProcessList.pbi"
 
 
 ;- Constants
@@ -322,7 +324,7 @@ DataSection
 	Data.s "PEArch.exe [/?] [/E|/AsError] [/H|/AsHex] [/F|/FullText] <File>" + #CRLF$ + 
 	       "" + #CRLF$ +
 	       "Options:" + #CRLF$ +
-	       "  /?             Prints this help text." + #CRLF$ +
+	       "  /?             Prints this help text, and some additional details." + #CRLF$ +
 	       "  /E, /AsError   Gives out the result as an error code." + #CRLF$ +
 	       "  /H, /AsHex     Prints the architecture as a hex number." + #CRLF$ +
 	       "  /F, /FullText  Prints a longer description of the architecture." + #CRLF$

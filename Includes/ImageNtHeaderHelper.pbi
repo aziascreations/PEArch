@@ -1,17 +1,18 @@
 ﻿;{- Code Header
 ; ==- Basic Info -================================
 ;     Name: ImageNtHeaderHelper.pbi
-;  Version: 0.0.1
+;  Version: 0.0.2
 ;   Author: Herwin Bozet (NibblePoker)
 ;
 ; ==- Compatibility -=============================
 ;  Compiler version:
-;    * PureBasic 6.0 LTS
-;    * PureBasic 6.0 LTS - C Backend
+;    * PureBasic 5.73 LTS (x86/x64)
+;    * PureBasic 6.0 LTS (x64)
+;    * PureBasic 6.0 LTS - C Backend (x64)
 ; 
 ; ==- Links & License -===========================
-;  License: Unlicense
-;  GitHub: ???
+;  License: CC0 1.0 Universal (Public Domain)
+;  GitHub: https://github.com/aziascreations/PB-PEArch
 ;}
 
 
@@ -26,6 +27,7 @@ DeclareModule ImageNtHeaderHelper
 		#INHH_ERROR_CannotCreateFileMapping
 		#INHH_ERROR_CannotMapViewOfFile
 		#INHH_ERROR_CannotRetrieveHeaders
+		#INHH_ERROR_InvalidId
 	EndEnumeration
 	
 	; Loads the given file into memory, maps a view of it into memory and attempts to retrieve the IMAGE_NT_HEADERS32 structure.
@@ -64,10 +66,9 @@ Module ImageNtHeaderHelper
 		Define ImageNtHeaderId$
 		
 		If ImageNtHeaderId = #PB_Any
-			Repeat
-				RandomData(@ImageNtHeaderId, SizeOf(ImageNtHeaderId))
-				ImageNtHeaderId$ = Str(ImageNtHeaderId)
-			Until FindMapElement(OpenImageNtHeaders(), ImageNtHeaderId$) = #Null
+			DebuggerError("Unable to us #PB_Any as 'ImageNtHeaderId' !")
+			LastErrorCode = #INHH_ERROR_InvalidId
+			Goto INHH_GetImageNtHeader32_BadEnding
 		Else
 			ImageNtHeaderId$ = Str(ImageNtHeaderId)
 			If FindMapElement(OpenImageNtHeaders(), ImageNtHeaderId$) <>  #Null
@@ -157,18 +158,3 @@ Module ImageNtHeaderHelper
 		LastErrorCode = 0
 	EndProcedure
 EndModule
-
-
-;- Tests
-CompilerIf #PB_Compiler_IsMainFile
-	
-	
-	
-CompilerEndIf
-
-; IDE Options = PureBasic 6.21 (Windows - x64)
-; CursorPosition = 120
-; FirstLine = 102
-; Folding = --
-; EnableXP
-; DPIAware
