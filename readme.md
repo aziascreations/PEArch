@@ -5,6 +5,15 @@ a given [Windows PE](https://learn.microsoft.com/en-us/windows/win32/debug/pe-fo
 A total of 35 architectures are supported by this tool.
 
 
+> [!NOTE]
+> This is utility is in low maintenance mode. \
+> I consider it feature-complete, and unless a bug is found, I don't plan on updating it.
+
+> [!WARNING]
+> The given file is mapped in memory using `CreateFileMapping` with `PAGE_READONLY` and `SEC_IMAGE_NO_EXECUTE`. \
+> While risks are very low, you should be careful when handling untrusted executables and known malware.
+
+
 ## Usage
 ```
 PEArch.exe [/?] [/E|/AsError] [/H|/AsHex] [/F|/FullText] <File>
@@ -407,7 +416,7 @@ Command: pearch "C:\Windows\non-existant-file.exe"
 > ERRORLEVEL: 12
 ```
 
-**With `/AsHex` and `/AsError:**
+**With `/AsHex` and `/AsError`:**
 ```
 Command: pearch /AsHex "C:\Windows\explorer.exe"
 > STDOUT: 8664
@@ -435,7 +444,15 @@ Command: pearch /AsError /AsHex "C:\Windows\non-existant-file.exe"
 
 
 ## Cloning
-**TODO: Add instructions related to the submodule**
+Use this command to clone the repository and its submodules:
+```
+git clone --recurse-submodules https://github.com/aziascreations/PEArch.git
+```
+
+If you forgot the submodules, use this command:
+```shell
+git submodule update --init --recursive
+```
 
 
 ## License
