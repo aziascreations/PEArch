@@ -16,74 +16,112 @@
 ;}
 
 
+; ------------------------------------------------------------------------------
+;- Notes
+
+; No notes currently available.
+
+
+; ------------------------------------------------------------------------------
 ;- Compiler directive
+
 EnableExplicit
 
 XIncludeFile "./Includes/ImageNtHeaderHelper.pbi"
 XIncludeFile "./Includes/PB-Win32-GetConsoleProcessList/Includes/Win32_GetConsoleProcessList.pbi"
 
 
+
+; ------------------------------------------------------------------------------
 ;- Constants
-#IMAGE_FILE_MACHINE_UNKNOWN = $0
-#IMAGE_FILE_MACHINE_ALPHA = $184
-#IMAGE_FILE_MACHINE_ALPHA64 = $284
-#IMAGE_FILE_MACHINE_AM33 = $1d3
-#IMAGE_FILE_MACHINE_AMD64 = $8664
-#IMAGE_FILE_MACHINE_ARM = $1c0
-#IMAGE_FILE_MACHINE_ARM64 = $aa64
-#IMAGE_FILE_MACHINE_ARM64EC = $A641
-#IMAGE_FILE_MACHINE_ARM64X = $A64E
-#IMAGE_FILE_MACHINE_ARMNT = $1c4
-#IMAGE_FILE_MACHINE_AXP64 = $284
-#IMAGE_FILE_MACHINE_EBC = $ebc
-#IMAGE_FILE_MACHINE_I386 = $14c
-#IMAGE_FILE_MACHINE_IA64 = $200
-#IMAGE_FILE_MACHINE_LOONGARCH32 = $6232
-#IMAGE_FILE_MACHINE_LOONGARCH64 = $6264
-#IMAGE_FILE_MACHINE_M32R = $9041
-#IMAGE_FILE_MACHINE_MIPS16 = $266
-#IMAGE_FILE_MACHINE_MIPSFPU = $366
-#IMAGE_FILE_MACHINE_MIPSFPU16 = $466
-#IMAGE_FILE_MACHINE_POWERPC = $1f0
-#IMAGE_FILE_MACHINE_POWERPCFP = $1f1
-#IMAGE_FILE_MACHINE_R3000BE = $160
-#IMAGE_FILE_MACHINE_R3000 = $162
-#IMAGE_FILE_MACHINE_R4000 = $166
-#IMAGE_FILE_MACHINE_R10000 = $168
-#IMAGE_FILE_MACHINE_RISCV32 = $5032
-#IMAGE_FILE_MACHINE_RISCV64 = $5064
-#IMAGE_FILE_MACHINE_RISCV128 = $5128
-#IMAGE_FILE_MACHINE_SH3 = $1a2
-#IMAGE_FILE_MACHINE_SH3DSP = $1a3
-#IMAGE_FILE_MACHINE_SH4 = $1a6
-#IMAGE_FILE_MACHINE_SH5 = $1a8
-#IMAGE_FILE_MACHINE_THUMB = $1c2
-#IMAGE_FILE_MACHINE_WCEMIPSV2 = $169
+
+; Used when printing the help text
+; Could probably be defined in the RC file and then retrieved, but I won't implement it until it is really needed.
+#LongestArchCodeLength = 11
 
 
+
+; ------------------------------------------------------------------------------
 ;- Enumerations
+
+;-> Error Codes
 Enumeration PEARCH_ErrorCodes
-	#PEARCH_ERROR_None = 0
-	
-	#PEARCH_ERROR_ConsoleError = 1
-	#PEARCH_ERROR_UnknownError = 2
-	
-	;#PEARCH_ERROR_INHH_ERROR_IdAlreadyUsed = 10
-	;#PEARCH_ERROR_INHH_ERROR_IdNotfound = 11
-	#PEARCH_ERROR_INHH_ERROR_CannotOpenFile = 12
-	#PEARCH_ERROR_INHH_ERROR_CannotCreateFileMapping = 13
-	#PEARCH_ERROR_INHH_ERROR_CannotMapViewOfFile = 14
-	#PEARCH_ERROR_INHH_ERROR_CannotRetrieveHeaders = 15
-	
-	#PEARCH_ERROR_UnknownArgument = 20
-	#PEARCH_ERROR_MissingFileArgument = 21
-	#PEARCH_ERROR_TooManyFileArguments = 22
-	
-	#PEARCH_ERROR_UnknownAchitecture = 30
+    #PEARCH_ERROR_None = 0
+    
+    #PEARCH_ERROR_NoTerminal = 1
+    #PEARCH_ERROR_UnknownError = 2
+    
+    ;#PEARCH_ERROR_INHH_ERROR_IdAlreadyUsed = 10
+    ;#PEARCH_ERROR_INHH_ERROR_IdNotfound = 11
+    #PEARCH_ERROR_INHH_ERROR_CannotOpenFile = 12
+    #PEARCH_ERROR_INHH_ERROR_CannotCreateFileMapping = 13
+    #PEARCH_ERROR_INHH_ERROR_CannotMapViewOfFile = 14
+    #PEARCH_ERROR_INHH_ERROR_CannotRetrieveHeaders = 15
+    
+    #PEARCH_ERROR_UnknownArgument = 20
+    #PEARCH_ERROR_MissingFileArgument = 21
+    #PEARCH_ERROR_TooManyFileArguments = 22
+    
+    #PEARCH_ERROR_UnknownAchitecture = 30
 EndEnumeration
 
 
+;-> Localized strings IDs
+Enumeration LSCOM_StringIds
+    #PEARCH_Locale_Usage_Text = 1000
+    #PEARCH_Locale_Usage_Errors = 1001
+    #PEAECH_Locale_Usage_Architectures = 1002
+    
+    #PEARCH_Locale_Text_PressAnyKeyToContinue = 2000
+    
+    #PEARCH_Locale_ArchBaseCode_UNKNOWN     = 4000
+    #PEARCH_Locale_ArchBaseCode_ALPHA       = 4002
+    #PEARCH_Locale_ArchBaseCode_ALPHA64     = 4004
+    #PEARCH_Locale_ArchBaseCode_AM33        = 4006
+    #PEARCH_Locale_ArchBaseCode_AMD64       = 4008
+    #PEARCH_Locale_ArchBaseCode_ARM         = 4010
+    #PEARCH_Locale_ArchBaseCode_ARM64       = 4012
+    #PEARCH_Locale_ArchBaseCode_ARM64EC     = 4014
+    #PEARCH_Locale_ArchBaseCode_ARM64X      = 4016
+    #PEARCH_Locale_ArchBaseCode_ARMNT       = 4018
+    #PEARCH_Locale_ArchBaseCode_AXP64       = 4020
+    #PEARCH_Locale_ArchBaseCode_EBC         = 4022
+    #PEARCH_Locale_ArchBaseCode_I386        = 4024
+    #PEARCH_Locale_ArchBaseCode_IA64        = 4026
+    #PEARCH_Locale_ArchBaseCode_LOONGARCH32 = 4028
+    #PEARCH_Locale_ArchBaseCode_LOONGARCH64 = 4030
+    #PEARCH_Locale_ArchBaseCode_M32R        = 4032
+    #PEARCH_Locale_ArchBaseCode_MIPS16      = 4034
+    #PEARCH_Locale_ArchBaseCode_MIPSFPU     = 4036
+    #PEARCH_Locale_ArchBaseCode_MIPSFPU16   = 4038
+    #PEARCH_Locale_ArchBaseCode_POWERPC     = 4040
+    #PEARCH_Locale_ArchBaseCode_POWERPCFP   = 4042
+    #PEARCH_Locale_ArchBaseCode_R3000BE     = 4044
+    #PEARCH_Locale_ArchBaseCode_R3000       = 4046
+    #PEARCH_Locale_ArchBaseCode_R4000       = 4048
+    #PEARCH_Locale_ArchBaseCode_R10000      = 4050
+    #PEARCH_Locale_ArchBaseCode_RISCV32     = 4052
+    #PEARCH_Locale_ArchBaseCode_RISCV64     = 4054
+    #PEARCH_Locale_ArchBaseCode_RISCV128    = 4056
+    #PEARCH_Locale_ArchBaseCode_SH3         = 4058
+    #PEARCH_Locale_ArchBaseCode_SH3DSP      = 4060
+    #PEARCH_Locale_ArchBaseCode_SH4         = 4062
+    #PEARCH_Locale_ArchBaseCode_SH5         = 4064
+    #PEARCH_Locale_ArchBaseCode_THUMB       = 4066
+    #PEARCH_Locale_ArchBaseCode_WCEMIPSV2   = 4068
+    
+    #PEARCH_Locale_ArchBaseCode_NEWUNKNOWN  = 4998
+    
+    #PEARCH_Locale_UnknownArgument = 5000
+    #PEARCH_Locale_MissingFileArgument = 5001
+    #PEARCH_Locale_TooManyFileArguments = 5002
+EndEnumeration
+
+
+
+; ------------------------------------------------------------------------------
 ;- Globals
+
 Global ExitCode.i = #PEARCH_ERROR_None
 
 Global OptionAsHex.b = #False
@@ -93,295 +131,279 @@ Global OptionFullText.b = #False
 Global InputFile$ = #Null$
 
 
+
+; ------------------------------------------------------------------------------
 ;- Macros
+
 Macro HandlePeArch(ShortText, FullText, Code)
-	If OptionAsHex
-		PrintN(Hex(Code, #PB_Word))
-	Else
-		If OptionFullText
-			PrintN(FullText)
-		Else
-			PrintN(ShortText)
-		EndIf
-	EndIf
-	If OptionAsError
-		ExitCode = Code
-	EndIf
+    If OptionAsHex
+        PrintN(Hex(Code, #PB_Word))
+    Else
+        If OptionFullText
+            PrintN(FullText)
+        Else
+            PrintN(ShortText)
+        EndIf
+    EndIf
+    If OptionAsError
+        ExitCode = Code
+    EndIf
 EndMacro
 
 
+
+; ------------------------------------------------------------------------------
 ;- Procedures
+
+Procedure.s LoadString(StringId.i, MaxLength.i = 4098)
+    ; Note: Resource strings are limited to a maximum of 4097 characters
+    ; See: https://learn.microsoft.com/en-us/windows/win32/menurc/stringtable-resource
+    ; Source: https://github.com/aziascreations/PB-Win32-Internationalization
+    If MaxLength > 4098
+        DebuggerWarning("LoadString was given a MaxLength bigger than 4098 !")
+        MaxLength = 4098
+    EndIf
+    
+    Protected *Buffer = AllocateMemory((MaxLength + 1) * SizeOf(Character))
+    Protected Result$ = #Null$
+    
+    If *Buffer
+        If LoadString_(GetModuleHandle_(#Null), StringId, *Buffer, MaxLength)
+            Result$ = PeekS(*Buffer, MaxLength, #PB_Unicode)
+        Else
+            ; See: https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes
+            DebuggerWarning("LoadString failed for " + Str(StringId) + " - Error " + Str(GetLastError_()))
+        EndIf
+        FreeMemory(*Buffer)
+    Else
+        DebuggerWarning("LoadString failed to allocate memory for its internal buffer !")
+    EndIf
+    
+    ProcedureReturn Result$
+EndProcedure
+
 Procedure PrintUsageText(PrintFull.b = #False)
-	Define UsageText$
-	
-	Restore UsageText
-	
-	Read.s UsageText$
-	PrintN(UsageText$)
-	
-	If PrintFull
-		Read.s UsageText$
-		PrintN(UsageText$)
-	EndIf
+    PrintN(LoadString(#PEARCH_Locale_Usage_Text))
+    
+    If PrintFull
+        PrintN(LoadString(#PEARCH_Locale_Usage_Errors))
+        
+        PrintN(LoadString(#PEAECH_Locale_Usage_Architectures))
+        
+        ; Template: `0x0000 - xxxxxxxxxxx - ABC123`
+        Protected LookupTableOffset = 0
+        
+        While Not(PeekU(?ArchTextLookups + (LookupTableOffset * 4)) = 0 And PeekU(?ArchTextLookups + (LookupTableOffset * 4) + 2) = 0)
+            PrintN("  0x" +
+                   RSet(Hex(PeekU(?ArchTextLookups + (LookupTableOffset * 4))), 4, "0") +
+                   " - " +
+                   LSet(LoadString(PeekU(?ArchTextLookups + (LookupTableOffset * 4) + 2) + 0, #LongestArchCodeLength + 1), #LongestArchCodeLength, " ") +
+                   " - " +
+                   LoadString(PeekU(?ArchTextLookups + (LookupTableOffset * 4) + 2) + 1))
+            
+            LookupTableOffset = LookupTableOffset + 1
+        Wend
+        
+        PrintN("  0x???? - " +
+               LSet(LoadString(#PEARCH_Locale_ArchBaseCode_NEWUNKNOWN + 0, #LongestArchCodeLength + 1), #LongestArchCodeLength, " ") +
+               " - " +
+               LoadString(#PEARCH_Locale_ArchBaseCode_NEWUNKNOWN + 1))
+    EndIf
 EndProcedure
 
 ; Checks if the current process was started via another process (CMD), or not.
 Procedure.b IsProgramRunDirectly()
-	; Will act as a DWORD[2]
-	Define ProcessListBuffer.q
-	ProcedureReturn Bool(GetConsoleProcessList_(@ProcessListBuffer, 2) <= 1)
+    ; Will act as a DWORD[2]
+    Define ProcessListBuffer.q
+    ProcedureReturn Bool(GetConsoleProcessList_(@ProcessListBuffer, 2) <= 1)
 EndProcedure
 
 
+
+; ------------------------------------------------------------------------------
+;- SubRoutines
+
+Procedure SUB_ExitProgram()
+    If IsProgramRunDirectly()
+        PrintN(LoadString(#PEARCH_Locale_Text_PressAnyKeyToContinue))
+        Input()
+    EndIf
+    
+    End ExitCode
+EndProcedure
+
+
+
+; ------------------------------------------------------------------------------
 ;- App's code
+
+;-> Setup
+
 If Not OpenConsole("PEArch")
-	ExitCode = #PEARCH_ERROR_ConsoleError
-	Goto PEArch_End
+    End #PEARCH_ERROR_NoTerminal
 EndIf
 
 
+;-> Parsing launch arguments
+
 Define IParam.i
 For IParam = 0 To CountProgramParameters()
-	Define CurrentParam$ = ProgramParameter(IParam)
-	
-	If Len(CurrentParam$) > 0
-		If Left(CurrentParam$, 1) <> "/"
-			If InputFile$ = #Null$
-				InputFile$ = CurrentParam$
-			Else
-				ConsoleError("More than one input file was given !")
-				ExitCode = #PEARCH_ERROR_TooManyFileArguments
-				PrintUsageText()
-				Goto PEArch_End
-			EndIf
-		Else
-			CurrentParam$ = UCase(CurrentParam$)
-			
-			If CurrentParam$ = "/ASHEX" Or CurrentParam$ = "/H"
-				OptionAsHex = #True
-			ElseIf CurrentParam$ = "/?"
-				PrintUsageText(#True)
-				Goto PEArch_End
-			ElseIf CurrentParam$ = "/ASERROR" Or CurrentParam$ = "/E"
-				OptionAsError = #True
-			ElseIf CurrentParam$ = "/FULLTEXT" Or CurrentParam$ = "/F"
-				OptionFullText = #True
-			Else
-				ConsoleError("Unknown argument: '" + CurrentParam$ + "'")
-				ExitCode = #PEARCH_ERROR_UnknownArgument
-				PrintUsageText()
-				Goto PEArch_End
-			EndIf
-		EndIf
-	EndIf
-	
+    Define CurrentParam$ = ProgramParameter(IParam)
+    
+    If Len(CurrentParam$) > 0
+        If Left(CurrentParam$, 1) <> "/"
+            If InputFile$ = #Null$
+                InputFile$ = CurrentParam$
+            Else
+                ConsoleError(LoadString(#PEARCH_Locale_TooManyFileArguments))
+                ExitCode = #PEARCH_ERROR_TooManyFileArguments
+                PrintUsageText()
+                SUB_ExitProgram()
+            EndIf
+        Else
+            CurrentParam$ = UCase(CurrentParam$)
+            
+            If CurrentParam$ = "/ASHEX" Or CurrentParam$ = "/H"
+                OptionAsHex = #True
+            ElseIf CurrentParam$ = "/?"
+                PrintUsageText(#True)
+                SUB_ExitProgram()
+            ElseIf CurrentParam$ = "/ASERROR" Or CurrentParam$ = "/E"
+                OptionAsError = #True
+            ElseIf CurrentParam$ = "/FULLTEXT" Or CurrentParam$ = "/F"
+                OptionFullText = #True
+            Else
+                ConsoleError(ReplaceString(LoadString(#PEARCH_Locale_UnknownArgument), "{0}", CurrentParam$))
+                ExitCode = #PEARCH_ERROR_UnknownArgument
+                PrintUsageText()
+                SUB_ExitProgram()
+            EndIf
+        EndIf
+    EndIf
 Next
 
 
+;-> Post-processing launch arguments
+
 If InputFile$ = #Null$
-	ConsoleError("No input file given !")
-	ExitCode = #PEARCH_ERROR_MissingFileArgument
-	PrintUsageText()
-	Goto PEArch_End
+    ConsoleError(LoadString(#PEARCH_Locale_MissingFileArgument))
+    ExitCode = #PEARCH_ERROR_MissingFileArgument
+    PrintUsageText()
+    SUB_ExitProgram()
 EndIf
 
 
 Define *Headers.IMAGE_NT_HEADERS32 = ImageNtHeaderHelper::GetImageNtHeader32(0, InputFile$)
 If *Headers = #Null
-	Define HelperErrorCode.i = ImageNtHeaderHelper::GetLastError()
-	
-	Select HelperErrorCode
-		Case ImageNtHeaderHelper::#INHH_ERROR_CannotOpenFile
-			ConsoleError("Cannot open file !")
-			ExitCode = #PEARCH_ERROR_INHH_ERROR_CannotOpenFile
-			
-		Case ImageNtHeaderHelper::#INHH_ERROR_CannotCreateFileMapping
-			ConsoleError("Cannot create file mapping !")
-			ExitCode = #PEARCH_ERROR_INHH_ERROR_CannotCreateFileMapping
-			
-		Case ImageNtHeaderHelper::#INHH_ERROR_CannotMapViewOfFile
-			ConsoleError("Cannot map view of file into memory !")
-			ExitCode = #PEARCH_ERROR_INHH_ERROR_CannotMapViewOfFile
-			
-		Case ImageNtHeaderHelper::#INHH_ERROR_CannotRetrieveHeaders
-			ConsoleError("Cannot retrieve PE headers !")
-			ExitCode = #PEARCH_ERROR_INHH_ERROR_CannotRetrieveHeaders
-			
-		Default 
-			ConsoleError("Unknown 'ImageNtHeaderHelper' error ! ("+Str(HelperErrorCode)+")")
-			ExitCode = #PEARCH_ERROR_UnknownError
-	EndSelect
-	
-	If OptionAsError
-		ExitCode = 0
-	EndIf
-	
-	Goto PEArch_End
+    Define HelperErrorCode.i = ImageNtHeaderHelper::GetLastError()
+    
+    Select HelperErrorCode
+        Case ImageNtHeaderHelper::#INHH_ERROR_CannotOpenFile
+            ConsoleError("Cannot open file !")
+            ExitCode = #PEARCH_ERROR_INHH_ERROR_CannotOpenFile
+            
+        Case ImageNtHeaderHelper::#INHH_ERROR_CannotCreateFileMapping
+            ConsoleError("Cannot create file mapping !")
+            ExitCode = #PEARCH_ERROR_INHH_ERROR_CannotCreateFileMapping
+            
+        Case ImageNtHeaderHelper::#INHH_ERROR_CannotMapViewOfFile
+            ConsoleError("Cannot map view of file into memory !")
+            ExitCode = #PEARCH_ERROR_INHH_ERROR_CannotMapViewOfFile
+            
+        Case ImageNtHeaderHelper::#INHH_ERROR_CannotRetrieveHeaders
+            ConsoleError("Cannot retrieve PE headers !")
+            ExitCode = #PEARCH_ERROR_INHH_ERROR_CannotRetrieveHeaders
+            
+        Default 
+            ConsoleError("Unknown 'ImageNtHeaderHelper' error ! ("+Str(HelperErrorCode)+")")
+            ExitCode = #PEARCH_ERROR_UnknownError
+    EndSelect
+    
+    If OptionAsError
+        ExitCode = 0
+    EndIf
+    
+    SUB_ExitProgram()
 EndIf
 
 
+;-> Printing the arch code/text
+
 Define PeArchId.u = *Headers\FileHeader\Machine
 
-Select PeArchId
-	Case #IMAGE_FILE_MACHINE_UNKNOWN
-		HandlePeArch("UNKNOWN", "The content of this field is assumed To be applicable To any machine type", PeArchId)
-	Case #IMAGE_FILE_MACHINE_ALPHA
-		HandlePeArch("ALPHA", "Alpha AXP, 32-bit address space", PeArchId)
-	Case #IMAGE_FILE_MACHINE_ALPHA64
-		HandlePeArch("ALPHA64", "Alpha 64, 64-bit address space", PeArchId)
-	Case #IMAGE_FILE_MACHINE_AM33
-		HandlePeArch("AM33", "Matsushita AM33", PeArchId)
-	Case #IMAGE_FILE_MACHINE_AMD64
-		HandlePeArch("AMD64", "x64", PeArchId)
-	Case #IMAGE_FILE_MACHINE_ARM
-		HandlePeArch("ARM", "ARM little endian", PeArchId)
-	Case #IMAGE_FILE_MACHINE_ARM64
-		HandlePeArch("ARM64", "ARM64 little endian", PeArchId)
-	Case #IMAGE_FILE_MACHINE_ARM64EC
-		HandlePeArch("ARM64EC", "ABI that enables interoperability between native ARM64 And emulated x64 code.", PeArchId)
-	Case #IMAGE_FILE_MACHINE_ARM64X
-		HandlePeArch("ARM64X", "Binary format that allows both native ARM64 And ARM64EC code To coexist in the same file.", PeArchId)
-	Case #IMAGE_FILE_MACHINE_ARMNT
-		HandlePeArch("ARMNT", "ARM Thumb-2 little endian", PeArchId)
-	Case #IMAGE_FILE_MACHINE_AXP64
-		HandlePeArch("AXP64", "AXP 64 (Same As Alpha 64)", PeArchId)
-	Case #IMAGE_FILE_MACHINE_EBC
-		HandlePeArch("EBC", "EFI byte code", PeArchId)
-	Case #IMAGE_FILE_MACHINE_I386
-		HandlePeArch("I386", "Intel 386 Or later processors And compatible processors", PeArchId)
-	Case #IMAGE_FILE_MACHINE_IA64
-		HandlePeArch("IA64", "Intel Itanium processor family", PeArchId)
-	Case #IMAGE_FILE_MACHINE_LOONGARCH32
-		HandlePeArch("LOONGARCH32", "LoongArch 32-bit processor family", PeArchId)
-	Case #IMAGE_FILE_MACHINE_LOONGARCH64
-		HandlePeArch("LOONGARCH64", "LoongArch 64-bit processor family", PeArchId)
-	Case #IMAGE_FILE_MACHINE_M32R
-		HandlePeArch("M32R", "Mitsubishi M32R little endian", PeArchId)
-	Case #IMAGE_FILE_MACHINE_MIPS16
-		HandlePeArch("MIPS16", "MIPS16", PeArchId)
-	Case #IMAGE_FILE_MACHINE_MIPSFPU
-		HandlePeArch("MIPSFPU", "MIPS With FPU", PeArchId)
-	Case #IMAGE_FILE_MACHINE_MIPSFPU16
-		HandlePeArch("MIPSFPU16", "MIPS16 With FPU", PeArchId)
-	Case #IMAGE_FILE_MACHINE_POWERPC
-		HandlePeArch("POWERPC", "Power PC little endian", PeArchId)
-	Case #IMAGE_FILE_MACHINE_POWERPCFP
-		HandlePeArch("POWERPCFP", "Power PC With floating point support", PeArchId)
-	Case #IMAGE_FILE_MACHINE_R3000BE
-		HandlePeArch("R3000BE", "MIPS I compatible 32-bit big endian", PeArchId)
-	Case #IMAGE_FILE_MACHINE_R3000
-		HandlePeArch("R3000", "MIPS I compatible 32-bit little endian", PeArchId)
-	Case #IMAGE_FILE_MACHINE_R4000
-		HandlePeArch("R4000", "MIPS III compatible 64-bit little endian", PeArchId)
-	Case #IMAGE_FILE_MACHINE_R10000
-		HandlePeArch("R10000", "MIPS IV compatible 64-bit little endian", PeArchId)
-	Case #IMAGE_FILE_MACHINE_RISCV32
-		HandlePeArch("RISCV32", "RISC-V 32-bit address space", PeArchId)
-	Case #IMAGE_FILE_MACHINE_RISCV64
-		HandlePeArch("RISCV64", "RISC-V 64-bit address space", PeArchId)
-	Case #IMAGE_FILE_MACHINE_RISCV128
-		HandlePeArch("RISCV128", "RISC-V 128-bit address space", PeArchId)
-	Case #IMAGE_FILE_MACHINE_SH3
-		HandlePeArch("SH3", "Hitachi SH3", PeArchId)
-	Case #IMAGE_FILE_MACHINE_SH3DSP
-		HandlePeArch("SH3DSP", "Hitachi SH3 DSP", PeArchId)
-	Case #IMAGE_FILE_MACHINE_SH4
-		HandlePeArch("SH4", "Hitachi SH4", PeArchId)
-	Case #IMAGE_FILE_MACHINE_SH5
-		HandlePeArch("SH5", "Hitachi SH5", PeArchId)
-	Case #IMAGE_FILE_MACHINE_THUMB
-		HandlePeArch("THUMB", "Thumb", PeArchId)
-	Case #IMAGE_FILE_MACHINE_WCEMIPSV2
-		HandlePeArch("WCEMIPSV2", "MIPS little-endian WCE v2", PeArchId)
-	Default
-		If OptionAsHex
-			HandlePeArch("WCEMIPSV2", "MIPS little-endian WCE v2", PeArchId)
-		Else
-			If OptionAsError
-				ExitCode = 0
-			Else 
-				ExitCode = #PEARCH_ERROR_UnknownAchitecture
-			EndIf
-		EndIf
-EndSelect
+Define ArchLocaleBaseCode = #PEARCH_Locale_ArchBaseCode_UNKNOWN
+Define LookupTableOffset = 0
+Define WasArchTextFound = #False
 
+; Searching and printing the code's info
+While Not(PeekU(?ArchTextLookups + (LookupTableOffset * 4)) = 0 And PeekU(?ArchTextLookups + (LookupTableOffset * 4) + 2) = 0)
+    If PeekU(?ArchTextLookups + (LookupTableOffset * 4)) = PeArchId
+        HandlePeArch(LoadString(PeekU(?ArchTextLookups + (LookupTableOffset * 4) + 2) + 0, #LongestArchCodeLength + 1),
+                     LoadString(PeekU(?ArchTextLookups + (LookupTableOffset * 4) + 2) + 1),
+                     PeArchId)
+        WasArchTextFound = #True
+        Break
+    EndIf
+    
+    LookupTableOffset = LookupTableOffset + 1
+Wend
+
+; In case the architecture is not yet known by PEArch
+If Not WasArchTextFound
+    If OptionAsHex Or OptionAsError
+        HandlePeArch(LoadString(#PEARCH_Locale_ArchBaseCode_NEWUNKNOWN + 0, #LongestArchCodeLength + 1),
+                     LoadString(#PEARCH_Locale_ArchBaseCode_NEWUNKNOWN + 1),
+                     PeArchId)
+    Else
+        ExitCode = #PEARCH_ERROR_UnknownAchitecture
+    EndIf
+EndIf
 
 ImageNtHeaderHelper::FreeImageNtHeader32(0)
 
 
-PEArch_End:
-If IsProgramRunDirectly()
-	PrintN("Press enter to exit...")
-	Input()
-EndIf
+;-> Exit
+SUB_ExitProgram()
 
-End ExitCode
 
 
 ;- Data section
 DataSection
-	UsageText:
-	Data.s "PEArch.exe [/?] [/E|/AsError] [/H|/AsHex] [/F|/FullText] <File>" + #CRLF$ + 
-	       "" + #CRLF$ +
-	       "Options:" + #CRLF$ +
-	       "  /?             Prints this help text, and some additional details." + #CRLF$ +
-	       "  /E, /AsError   Gives out the result as an error code." + #CRLF$ +
-	       "  /H, /AsHex     Prints the architecture as a hex number." + #CRLF$ +
-	       "  /F, /FullText  Prints a longer description of the architecture." + #CRLF$
-	Data.s "Errors:" + #CRLF$ +
-	       "  0  - No error" + #CRLF$ +
-	       "  1  - Console error" + #CRLF$ +
-	       "  1  - Unknown error" + #CRLF$ +
-	       "  12 - Unable to open the file" + #CRLF$ +
-	       "  13 - Cannot create a file mapping" + #CRLF$ +
-	       "  14 - Cannot map the file into memory" + #CRLF$ +
-	       "  15 - Unable to retrieve the NT headers" + #CRLF$ +
-	       "  20 - Unknown argument" + #CRLF$ +
-	       "  21 - Missing file argument" + #CRLF$ +
-	       "  22 - Too many file arguments" + #CRLF$ +
-	       "  30 - The architecture is unknown, '/AsHex' will bypass it" + #CRLF$ +
-	       #CRLF$ +
-	       "Architectures:" + #CRLF$ +
-	       "  0x0    - UNKNOWN     - The content of this field is assumed To be applicable To any machine type" + #CRLF$ + 
-	       "  0x184  - ALPHA       - Alpha AXP, 32-bit address space" + #CRLF$ + 
-	       "  0x284  - ALPHA64     - Alpha 64, 64-bit address space" + #CRLF$ + 
-	       "  0x1d3  - AM33        - Matsushita AM33" + #CRLF$ + 
-	       "  0x8664 - AMD64       - x64" + #CRLF$ + 
-	       "  0x1c0  - ARM         - ARM little endian" + #CRLF$ + 
-	       "  0xaa64 - ARM64       - ARM64 little endian" + #CRLF$ + 
-	       "  0xA641 - ARM64EC     - ABI that enables interoperability between native ARM64 And emulated x64 code." + #CRLF$ + 
-	       "  0xA64E - ARM64X      - Binary format that allows both native ARM64 And ARM64EC code To coexist in the same file." + #CRLF$ + 
-	       "  0x1c4  - ARMNT       - ARM Thumb-2 little endian" + #CRLF$ + 
-	       "  0x284  - AXP64       - AXP 64 (Same As Alpha 64)" + #CRLF$ +
-	       "  0xebc  - EBC         - EFI byte code" + #CRLF$ + 
-	       "  0x14c  - I386        - Intel 386 Or later processors And compatible processors" + #CRLF$ + 
-	       "  0x200  - IA64        - Intel Itanium processor family" + #CRLF$ + 
-	       "  0x6232 - LOONGARCH32 - LoongArch 32-bit processor family" + #CRLF$ + 
-	       "  0x6264 - LOONGARCH64 - LoongArch 64-bit processor family" + #CRLF$ + 
-	       "  0x9041 - M32R        - Mitsubishi M32R little endian" + #CRLF$ + 
-	       "  0x266  - MIPS16      - MIPS16" + #CRLF$ + 
-	       "  0x366  - MIPSFPU     - MIPS With FPU" + #CRLF$ + 
-	       "  0x466  - MIPSFPU16   - MIPS16 With FPU" + #CRLF$ + 
-	       "  0x1f0  - POWERPC     - Power PC little endian" + #CRLF$ + 
-	       "  0x1f1  - POWERPCFP   - Power PC With floating point support" + #CRLF$ + 
-	       "  0x160  - R3000BE     - MIPS I compatible 32-bit big endian" + #CRLF$ + 
-	       "  0x162  - R3000       - MIPS I compatible 32-bit little endian" + #CRLF$ + 
-	       "  0x166  - R4000       - MIPS III compatible 64-bit little endian" + #CRLF$ + 
-	       "  0x168  - R10000      - MIPS IV compatible 64-bit little endian" + #CRLF$ + 
-	       "  0x5032 - RISCV32     - RISC-V 32-bit address space" + #CRLF$ + 
-	       "  0x5064 - RISCV64     - RISC-V 64-bit address space" + #CRLF$ + 
-	       "  0x5128 - RISCV128    - RISC-V 128-bit address space" + #CRLF$ + 
-	       "  0x1a2  - SH3         - Hitachi SH3" + #CRLF$ + 
-	       "  0x1a3  - SH3DSP      - Hitachi SH3 DSP" + #CRLF$ + 
-	       "  0x1a6  - SH4         - Hitachi SH4" + #CRLF$ + 
-	       "  0x1a8  - SH5         - Hitachi SH5" + #CRLF$ + 
-	       "  0x1c2  - THUMB       - Thumb" + #CRLF$ + 
-	       "  0x169  - WCEMIPSV2   - MIPS little-endian WCE v2" + #CRLF$
+    ArchTextLookups:
+    Data.u $0000, #PEARCH_Locale_ArchBaseCode_UNKNOWN
+    Data.u $0184, #PEARCH_Locale_ArchBaseCode_ALPHA
+    Data.u $0284, #PEARCH_Locale_ArchBaseCode_ALPHA64
+    Data.u $01d3, #PEARCH_Locale_ArchBaseCode_AM33
+    Data.u $8664, #PEARCH_Locale_ArchBaseCode_AMD64
+    Data.u $01c0, #PEARCH_Locale_ArchBaseCode_ARM
+    Data.u $aa64, #PEARCH_Locale_ArchBaseCode_ARM64
+    Data.u $A641, #PEARCH_Locale_ArchBaseCode_ARM64EC
+    Data.u $A64E, #PEARCH_Locale_ArchBaseCode_ARM64X
+    Data.u $01c4, #PEARCH_Locale_ArchBaseCode_ARMNT
+    Data.u $0284, #PEARCH_Locale_ArchBaseCode_AXP64
+    Data.u $0ebc, #PEARCH_Locale_ArchBaseCode_EBC
+    Data.u $014c, #PEARCH_Locale_ArchBaseCode_I386
+    Data.u $0200, #PEARCH_Locale_ArchBaseCode_IA64
+    Data.u $6232, #PEARCH_Locale_ArchBaseCode_LOONGARCH32
+    Data.u $6264, #PEARCH_Locale_ArchBaseCode_LOONGARCH64
+    Data.u $9041, #PEARCH_Locale_ArchBaseCode_M32R
+    Data.u $0266, #PEARCH_Locale_ArchBaseCode_MIPS16
+    Data.u $0366, #PEARCH_Locale_ArchBaseCode_MIPSFPU
+    Data.u $0466, #PEARCH_Locale_ArchBaseCode_MIPSFPU16
+    Data.u $01f0, #PEARCH_Locale_ArchBaseCode_POWERPC
+    Data.u $01f1, #PEARCH_Locale_ArchBaseCode_POWERPCFP
+    Data.u $0160, #PEARCH_Locale_ArchBaseCode_R3000BE
+    Data.u $0162, #PEARCH_Locale_ArchBaseCode_R3000
+    Data.u $0166, #PEARCH_Locale_ArchBaseCode_R4000
+    Data.u $0168, #PEARCH_Locale_ArchBaseCode_R10000
+    Data.u $5032, #PEARCH_Locale_ArchBaseCode_RISCV32
+    Data.u $5064, #PEARCH_Locale_ArchBaseCode_RISCV64
+    Data.u $5128, #PEARCH_Locale_ArchBaseCode_RISCV128
+    Data.u $01a2, #PEARCH_Locale_ArchBaseCode_SH3
+    Data.u $01a3, #PEARCH_Locale_ArchBaseCode_SH3DSP
+    Data.u $01a6, #PEARCH_Locale_ArchBaseCode_SH4
+    Data.u $01a8, #PEARCH_Locale_ArchBaseCode_SH5
+    Data.u $01c2, #PEARCH_Locale_ArchBaseCode_THUMB
+    Data.u $0169, #PEARCH_Locale_ArchBaseCode_WCEMIPSV2
+    Data.u $0000, $0000
 EndDataSection
-
-; IDE Options = PureBasic 6.21 (Windows - x64)
-; CursorPosition = 220
-; FirstLine = 212
-; Folding = -
-; EnableXP
-; DPIAware

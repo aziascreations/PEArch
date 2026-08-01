@@ -1,0 +1,159 @@
+{
+	"_lang": "LANG_ENGLISH",
+	"_sublang": "SUBLANG_NEUTRAL",
+	
+	"": "################################################################################",
+	
+	"1000": [
+		"PEArch.exe [/?] [/E|/AsError] [/H|/AsHex] [/F|/FullText] <File>",
+		"",
+		"Options:",
+		"  /?             Prints this help text, and some additional details.",
+		"  /E, /AsError   Gives out the result as an error code.",
+		"  /H, /AsHex     Prints the architecture as a hex number.",
+		"  /F, /FullText  Prints a longer description of the architecture."
+	],
+	
+	"1001": [
+		"",
+		"Error Codes:",
+		"  Informative:",
+		"   * 0  - No error",
+		"  Fatal errors: (1-9)",
+		"   * 1  - Console error",
+		"   * 2  - Unknown error",
+		"  IO errors: (10-19)",
+		"   * 12 - Unable to open the file",
+		"   * 13 - Cannot create a file mapping",
+		"   * 14 - Cannot map the file into memory",
+		"   * 15 - Unable to retrieve the NT headers",
+		"  Launch arguments errors: (20-21)",
+		"   * 20 - Unknown argument",
+		"   * 21 - Missing file argument",
+		"   * 22 - Too many file arguments",
+		"  Application errors: (30-39)",
+		"   * 30 - The architecture is unknown, '/AsHex' will bypass it"
+	],
+	
+	"1002": [
+		"",
+		"Architectures:"
+	],
+	
+	
+	"2000": "\\nPress any key to continue...",
+	
+	
+	"4000": "UNKNOWN",
+	"4001": "The content of this field is assumed Tt be applicable to any machine type",
+	
+	"4002": "ALPHA",
+	"4003": "Alpha AXP, 32-bit address space",
+	
+	"4004": "ALPHA64",
+	"4005": "Alpha 64, 64-bit address space",
+	
+	"4006": "AM33",
+	"4007": "Matsushita AM33",
+	
+	"4008": "AMD64",
+	"4009": "x64",
+	
+	"4010": "ARM",
+	"4011": "ARM little endian",
+	
+	"4012": "ARM64",
+	"4013": "ARM64 little endian",
+	
+	"4014": "ARM64EC",
+	"4015": "ABI that enables interoperability between native ARM64 And emulated x64 code.",
+	
+	"4016": "ARM64X",
+	"4017": "Binary format that allows both native ARM64 And ARM64EC code to coexist in the same file.",
+	
+	"4018": "ARMNT",
+	"4019": "ARM Thumb-2 little endian",
+	
+	"4020": "AXP64",
+	"4021": "AXP 64 (Same As Alpha 64)",
+	
+	"4022": "EBC",
+	"4023": "EFI byte code",
+	
+	"4024": "I386",
+	"4025": "Intel 386 or later processors and compatible processors",
+	
+	"4026": "IA64",
+	"4027": "Intel Itanium processor family",
+	
+	"4028": "LOONGARCH32",
+	"4029": "LoongArch 32-bit processor family",
+	
+	"4030": "LOONGARCH64",
+	"4031": "LoongArch 64-bit processor family",
+	
+	"4032": "M32R",
+	"4033": "Mitsubishi M32R little endian",
+	
+	"4034": "MIPS16",
+	"4035": "MIPS16",
+	
+	"4036": "MIPSFPU",
+	"4037": "MIPS With FPU",
+	
+	"4038": "MIPSFPU16",
+	"4039": "MIPS16 With FPU",
+	
+	"4040": "POWERPC",
+	"4041": "Power PC little endian",
+	
+	"4042": "POWERPCFP",
+	"4043": "Power PC With floating point support",
+	
+	"4044": "R3000BE",
+	"4045": "MIPS I compatible 32-bit big endian",
+	
+	"4046": "R3000",
+	"4047": "MIPS I compatible 32-bit little endian",
+	
+	"4048": "R4000",
+	"4049": "MIPS III compatible 64-bit little endian",
+	
+	"4050": "R10000",
+	"4051": "MIPS IV compatible 64-bit little endian",
+	
+	"4052": "RISCV32",
+	"4053": "RISC-V 32-bit address space",
+	
+	"4054": "RISCV64",
+	"4055": "RISC-V 64-bit address space",
+	
+	"4056": "RISCV128",
+	"4057": "RISC-V 128-bit address space",
+	
+	"4058": "SH3",
+	"4059": "Hitachi SH3",
+	
+	"4060": "SH3DSP",
+	"4061": "Hitachi SH3 DSP",
+	
+	"4062": "SH4",
+	"4063": "Hitachi SH4",
+	
+	"4064": "SH5",
+	"4065": "Hitachi SH5",
+	
+	"4066": "THUMB",
+	"4067": "Thumb",
+	
+	"4068": "WCEMIPSV2",
+	"4069": "MIPS little-endian WCE v2",
+	
+	"4998": "NEWUNKNOWN",
+	"4999": "Newer architecture unknown by PEArch",
+	
+	
+	"5000": "Unknown argument: '{0}'",
+	"5001": "No file was given !",
+	"5002": "Too many files given !"
+}

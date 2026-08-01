@@ -4,6 +4,8 @@ a given [Windows PE](https://learn.microsoft.com/en-us/windows/win32/debug/pe-fo
 
 A total of 35 architectures are supported by this tool.
 
+The tool is also available in English and French in auto-localized and statically localized versions.
+
 
 > [!NOTE]
 > This is utility is in low maintenance mode. \
@@ -394,6 +396,16 @@ Options:
             <span class="code">361</span>
           </td>
           <td>MIPS little-endian WCE v2v2</td>
+        </tr>
+        <tr>
+          <td>NEWUNKNOWN</td>
+          <td>
+            <span class="code">0x????</span>
+          </td>
+          <td>
+            <span class="code">???</span>
+          </td>
+          <td>Newer architecture unknown by PEArch</td>
         </tr>
       </tbody>
     </table>
