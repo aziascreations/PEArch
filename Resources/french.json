@@ -27,6 +27,7 @@
 		"   * 13 - Impossible de créer un mappage de fichier",
 		"   * 14 - Impossible de mapper le fichier en mémoire",
 		"   * 15 - Impossible de récupérer les en-têtes NT",
+		"   * 16 - Impossible d'allouer de la mémoire",
 		"  Erreurs d'arguments de lancement : (20-21)",
 		"   * 20 - Argument inconnu",
 		"   * 21 - Argument de fichier manquant",
@@ -85,5 +86,15 @@
 	
 	"5000": "Option de lancement inconnue: '{0}'",
 	"5001": "Aucun fichier fourni !",
-	"5002": "Trop de fichiers fournis !"
+	"5002": "Trop de fichiers fournis !",
+	
+	
+	"6000": "Impossible d'ouvrir le fichier donné !",
+	"6001": "Impossible de créer un mappage de fichier !",
+	"6002": "Impossible de mapper le fichier en mémoire !",
+	"6003": "Impossible de récupérer les en-têtes NT !",
+	"6004": "Impossible d'allouer de la mémoire !",
+	
+	"6010": "Erreur inconnue lors du chargement du fichier !",
+	"6011": "Erreur inconnue lors de la récupération des headers NT !"
 }

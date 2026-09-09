@@ -27,6 +27,7 @@
 		"   * 13 - Cannot create a file mapping",
 		"   * 14 - Cannot map the file into memory",
 		"   * 15 - Unable to retrieve the NT headers",
+		"   * 16 - Failed to allocate memory",
 		"  Launch arguments errors: (20-21)",
 		"   * 20 - Unknown argument",
 		"   * 21 - Missing file argument",
@@ -155,5 +156,15 @@
 	
 	"5000": "Unknown argument: '{0}'",
 	"5001": "No file was given !",
-	"5002": "Too many files given !"
+	"5002": "Too many files given !",
+	
+	
+	"6000": "Unable to open the given file !",
+	"6001": "Unable to create a file mapping !",
+	"6002": "Unable map the file into memory !",
+	"6003": "Unable to retrieve the NT headers !",
+	"6004": "Failed to allocate memory !",
+	
+	"6010": "Unknown error while loading the file !",
+	"6011": "Unknown error while retrieving the NT headers !"
 }

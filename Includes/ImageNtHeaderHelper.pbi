@@ -1,14 +1,14 @@
 ﻿;{- Code Header
 ; ==- Basic Info -================================
 ;     Name: ImageNtHeaderHelper.pbi
-;  Version: 0.0.2
+;  Version: 0.1.0
 ;   Author: Herwin Bozet (NibblePoker)
 ;
 ; ==- Compatibility -=============================
 ;  Compiler version:
 ;    * PureBasic 5.73 LTS (x86/x64)
-;    * PureBasic 6.0 LTS (x64)
-;    * PureBasic 6.0 LTS - C Backend (x64)
+;    * PureBasic 6.21 LTS (x86/x64)
+;    * PureBasic 6.21 LTS - C Backend (x86/x64/arm64)
 ; 
 ; ==- Links & License -===========================
 ;  License: CC0 1.0 Universal (Public Domain)
@@ -16,145 +16,249 @@
 ;}
 
 
+; ------------------------------------------------------------------------------
 ;- Module declaration
 DeclareModule ImageNtHeaderHelper
 	
 	Enumeration INHH_ErrorCodes
 		#INHH_ERROR_None = 0
-		#INHH_ERROR_IdAlreadyUsed
-		#INHH_ERROR_IdNotfound
 		#INHH_ERROR_CannotOpenFile
 		#INHH_ERROR_CannotCreateFileMapping
 		#INHH_ERROR_CannotMapViewOfFile
+		#INHH_ERROR_CannotAllocateMemory
 		#INHH_ERROR_CannotRetrieveHeaders
-		#INHH_ERROR_InvalidId
+		#INHH_ERROR_NullPointerGiven
 	EndEnumeration
 	
-	; Loads the given file into memory, maps a view of it into memory and attempts to retrieve the IMAGE_NT_HEADERS32 structure.
-	Declare.i GetImageNtHeader32(ImageNtHeaderId.i, FilePath$)
+	; Only made public to let us have better signature typing.
+	Structure PeImageData
+		FileId.i
+		MappingHandle.i
+		*ViewAddress
+		*ImageNtHeaders.IMAGE_NT_HEADERS32
+	EndStructure
 	
-	;
-	Declare.i FreeImageNtHeader32(ImageNtHeaderId.i)
+	; Opens a PE image and returns a pointer that future function will use to get information out of it.
+	; Returns non-zero on success, zero otherwise.
+	Declare.i OpenPeImage(PeImagePath$)
 	
-	;
-	Declare.i GetLastError()
-	Declare ClearLastError()
+	; Frees the internal structure allocated for a PE image that was loaded using `OpenPeImage()`.
+	; Returns `#True` on success, `#False` otherwise.
+	Declare.i FreePeImage(*ImageData.PeImageData)
+	
+	; Retrieves the `IMAGE_NT_HEADERS32` structure from a loaded PE image using the internal structure returned by `OpenPeImage()`.
+	; Must absolutely not be used after calling `FreePeImage()` on the associated internal structure.
+	Declare.i GetImageNtHeader32(*ImageData.PeImageData)
+	
+	; Retrieves the `FileHeader\Machine` field from the `IMAGE_NT_HEADERS32` associated to a loaded PE image using the
+	;  internal structure returned by `OpenPeImage()`.
+	; Returns the value on success, or `$0000` otherwise.
+	Declare.u GetImageMachine(*ImageData.PeImageData)
+	
+	Declare.i GetLastInternalError()
+	Declare.i GetLastWin32Error()
+	Declare ClearLastErrors()
+	
 EndDeclareModule
 
 
+
+; ------------------------------------------------------------------------------
 ;- Module definition
 Module ImageNtHeaderHelper
 	EnableExplicit
 	
+	; --------------------
+	;-> Constants
+	
+	; Sanity check for Win32 API constants
 	CompilerIf Not Defined(SEC_IMAGE_NO_EXECUTE, #PB_Constant)
 		#SEC_IMAGE_NO_EXECUTE = $11000000
 	CompilerEndIf
 	
-	Structure OpenImageNtHeader
-		FileId.i
-		*ViewAddress
-		*RetrievedNtHeaders
-	EndStructure
-	
-	Global LastErrorCode.i = 0
-	
-	Global NewMap OpenImageNtHeaders.OpenImageNtHeader()
+	CompilerIf #SEC_IMAGE_NO_EXECUTE <> $11000000
+		CompilerError "The value for `#SEC_IMAGE_NO_EXECUTE` isn't exactly `$11000000` !"
+	CompilerEndIf
 	
 	
-	Procedure.i GetImageNtHeader32(ImageNtHeaderId.i, FilePath$)
-		; Handling the ID and the map
-		Define ImageNtHeaderId$
+	; --------------------
+	;-> Globals
+	
+	Global LastWin32ErrorCode.i = #ERROR_SUCCESS
+	Global LastInternalErrorCode.i = #INHH_ERROR_None
+	
+	
+	; --------------------
+	;-> Public Procedures
+	
+	Procedure.i OpenPeImage(PeImagePath$)
+		Protected ImageFileId.i
+		Protected FileMappingHandle.i
+		Protected *FileMappingView
+		Protected *ReturnedData.PeImageData
 		
-		If ImageNtHeaderId = #PB_Any
-			DebuggerError("Unable to us #PB_Any as 'ImageNtHeaderId' !")
-			LastErrorCode = #INHH_ERROR_InvalidId
-			Goto INHH_GetImageNtHeader32_BadEnding
-		Else
-			ImageNtHeaderId$ = Str(ImageNtHeaderId)
-			If FindMapElement(OpenImageNtHeaders(), ImageNtHeaderId$) <>  #Null
-				Debug "The value used for 'ImageNtHeaderId' was already in use ! (" + ImageNtHeaderId$ + ")"
-				LastErrorCode = #INHH_ERROR_IdAlreadyUsed
-				ProcedureReturn #Null
-			EndIf
-		EndIf
-		
-		AddMapElement(OpenImageNtHeaders(), ImageNtHeaderId$)
+		ClearLastErrors()
 		
 		; Opening the file
-		Define InputFileHandle = ReadFile(#PB_Any, FilePath$)
+		ImageFileId = ReadFile(#PB_Any, PeImagePath$)
 		
-		If InputFileHandle = 0
-			Debug "Unable to open input file !"
-			LastErrorCode = #INHH_ERROR_CannotOpenFile
-			Goto INHH_GetImageNtHeader32_BadEnding
+		If ImageFileId = 0
+			LastWin32ErrorCode = GetLastError_()
+			LastInternalErrorCode = #INHH_ERROR_CannotOpenFile
+			
+			DebuggerError("Failed to open the '" + PeImagePath$ + "' file ! (" + Str(LastWin32ErrorCode) + ")")
+			ProcedureReturn #Null
 		EndIf
-		
-		OpenImageNtHeaders()\FileId = InputFileHandle
 		
 		; Mapping the file into memory
-		Define InputFileMappingHandle = CreateFileMapping_(FileID(InputFileHandle), #Null, #PAGE_READONLY | #SEC_IMAGE_NO_EXECUTE, 0, 0, #Null)
+		FileMappingHandle = CreateFileMapping_(FileID(ImageFileId), #Null, #PAGE_READONLY | #SEC_IMAGE_NO_EXECUTE, 0, 0, #Null)
 		
-		If InputFileMappingHandle = #ERROR_ALREADY_EXISTS Or InputFileMappingHandle = 0
-			Debug "Unable to create a file mapping !"
-			LastErrorCode = #INHH_ERROR_CannotCreateFileMapping
-			Goto INHH_GetImageNtHeader32_CloseInputFileHandle
+		If FileMappingHandle = #ERROR_ALREADY_EXISTS Or FileMappingHandle = 0
+			LastWin32ErrorCode = GetLastError_()
+			LastInternalErrorCode = #INHH_ERROR_CannotCreateFileMapping
+			
+			DebuggerError("Failed to create mapping for the '" + PeImagePath$ + "' file ! (" + Str(LastWin32ErrorCode) + ")")
+			CloseFile(ImageFileId)
+			ProcedureReturn #Null
 		EndIf
 		
-		Define InputFileViewPtr.i = MapViewOfFile_(InputFileMappingHandle, #FILE_MAP_READ, 0, 0, 0)
-		If InputFileViewPtr = #Null
-			Debug "Unable to map the input file into memory !"
-			LastErrorCode = #INHH_ERROR_CannotMapViewOfFile
-			Goto INHH_GetImageNtHeader32_CloseInputFileHandle
+		; Creating the view of the mapped file
+		Define *FileMappingView = MapViewOfFile_(FileMappingHandle, #FILE_MAP_READ, 0, 0, 0)
+		
+		If *FileMappingView = #Null
+			LastWin32ErrorCode = GetLastError_()
+			LastInternalErrorCode = #INHH_ERROR_CannotMapViewOfFile
+			
+			DebuggerError("Failed to map view of the '" + PeImagePath$ + "' file in memory ! (" + Str(LastWin32ErrorCode) + ")")
+			CloseHandle_(FileMappingHandle)
+			CloseFile(ImageFileId)
+			ProcedureReturn #Null
 		EndIf
 		
-		OpenImageNtHeaders()\ViewAddress = InputFileViewPtr
+		; Returning the data
+		*ReturnedData = AllocateMemory(SizeOf(PeImageData))
+		
+		If *ReturnedData = #Null
+			LastWin32ErrorCode = GetLastError_()
+			LastInternalErrorCode = #INHH_ERROR_CannotAllocateMemory
+			
+			DebuggerError("Failed to allocate memory for the `PeImageData` structure ! (" + Str(LastWin32ErrorCode) + ")")
+			UnmapViewOfFile_(*FileMappingView)
+			CloseHandle_(FileMappingHandle)
+			CloseFile(ImageFileId)
+			ProcedureReturn #Null
+		EndIf
+		
+		With *ReturnedData
+			\FileId = ImageFileId
+			\MappingHandle = FileMappingHandle
+			\ViewAddress = *FileMappingView
+		EndWith
+		
+		ProcedureReturn *ReturnedData
+	EndProcedure
+	
+	
+	Procedure.i FreePeImage(*ImageData.PeImageData)
+		ClearLastErrors()
+		
+		If *ImageData = #Null
+			LastInternalErrorCode = #INHH_ERROR_NullPointerGiven
+			
+			DebuggerError("The given pointer is #Null !")
+			ProcedureReturn #False
+		EndIf
+		
+		With *ImageData
+			UnmapViewOfFile_(\ViewAddress)
+			CloseHandle_(\MappingHandle)
+			CloseFile(\FileId)
+		EndWith
+		
+		FreeMemory(*ImageData)
+		
+		ProcedureReturn #True
+	EndProcedure
+	
+	
+	Procedure.i GetImageNtHeader32(*ImageData.PeImageData)
+		ClearLastErrors()
+		
+		; Safety check
+		If *ImageData = #Null
+			LastInternalErrorCode = #INHH_ERROR_NullPointerGiven
+			
+			DebuggerError("The given pointer is #Null !")
+			ProcedureReturn #Null
+		EndIf
 		
 		; Retrieving the NT headers
-		Define *RetrievedNtHeaders.IMAGE_NT_HEADERS32 = ImageNtHeader_(InputFileViewPtr)
-		If *RetrievedNtHeaders = #Null 
-			Debug "Unable to retrieve the NT headers !"
-			LastErrorCode = #INHH_ERROR_CannotRetrieveHeaders
-			Goto INHH_GetImageNtHeader32_UnmapFileView
+		If *ImageData\ImageNtHeaders <> #Null
+			ProcedureReturn *ImageData\ImageNtHeaders
 		EndIf
 		
-		OpenImageNtHeaders()\RetrievedNtHeaders = *RetrievedNtHeaders
-		
-		ProcedureReturn *RetrievedNtHeaders
-		
-		; Error cases
-		INHH_GetImageNtHeader32_UnmapFileView:
-		UnmapViewOfFile_(InputFileViewPtr)
-		
-		INHH_GetImageNtHeader32_CloseInputFileHandle:
-		CloseFile(InputFileHandle)
-		
-		INHH_GetImageNtHeader32_BadEnding:
-		DeleteMapElement(OpenImageNtHeaders(), ImageNtHeaderId$)
-		ProcedureReturn #Null
-	EndProcedure
-	
-	
-	Procedure.i FreeImageNtHeader32(ImageNtHeaderId.i)
-		Define ImageNtHeaderId$ = Str(ImageNtHeaderId)
-		
-		Define *HeaderInternalData.OpenImageNtHeader = FindMapElement(OpenImageNtHeaders(), ImageNtHeaderId$)
-		If *HeaderInternalData = #Null
-			ProcedureReturn #INHH_ERROR_IdNotfound
+		*ImageData\ImageNtHeaders = ImageNtHeader_(*ImageData\ViewAddress)
+		If *ImageData\ImageNtHeaders = #Null
+			LastWin32ErrorCode = GetLastError_()
+			LastInternalErrorCode = #INHH_ERROR_CannotRetrieveHeaders
+			
+			DebuggerError("Unable to retrieve the NT headers !")
+			ProcedureReturn #Null
 		EndIf
 		
-		UnmapViewOfFile_(*HeaderInternalData\ViewAddress)
-		CloseFile(*HeaderInternalData\FileId)
+		ProcedureReturn *ImageData\ImageNtHeaders
+	EndProcedure
+	
+	
+	Procedure.u GetImageMachine(*ImageData.PeImageData)
+		Protected *ImageNtHeaders.IMAGE_NT_HEADERS32
 		
-		ProcedureReturn #Null
+		; Getting the headers through the standard function
+		*ImageNtHeaders = GetImageNtHeader32(*ImageData)
+		If *ImageNtHeaders = #Null
+			ProcedureReturn #Null	
+		EndIf
+		
+		; Getting what we want from that structure
+		ProcedureReturn *ImageNtHeaders\FileHeader\Machine
 	EndProcedure
 	
 	
-	Procedure.i GetLastError()
-		ProcedureReturn LastErrorCode
+	Procedure.i GetLastInternalError()
+		ProcedureReturn LastInternalErrorCode
 	EndProcedure
 	
 	
-	Procedure ClearLastError()
-		LastErrorCode = 0
+	Procedure.i GetLastWin32Error()
+		ProcedureReturn LastWin32ErrorCode
+	EndProcedure
+	
+	
+	Procedure ClearLastErrors()
+		LastWin32ErrorCode = #ERROR_SUCCESS
+		LastInternalErrorCode = #INHH_ERROR_None
 	EndProcedure
 EndModule
+
+
+
+; ------------------------------------------------------------------------------
+;- Tests
+
+CompilerIf #PB_Compiler_IsMainFile
+	EnableExplicit
+	
+	UseModule ImageNtHeaderHelper
+	
+	Define *PeImage = ImageNtHeaderHelper::OpenPeImage("C:\Windows\SysWOW64\fontview.exe")
+	
+	If *PeImage = #Null
+		Debug "Error !"
+		End 1
+	EndIf
+	
+	Debug ImageNtHeaderHelper::GetImageMachine(*PeImage)
+	
+	ImageNtHeaderHelper::FreePeImage(*PeImage)
+	
+CompilerEndIf

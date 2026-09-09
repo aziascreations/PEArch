@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://www.purebasic.com/namespace" version="1.0" creator="PureBasic 6.21 - C Backend (Windows - arm64)">
+<project xmlns="http://www.purebasic.com/namespace" version="1.0" creator="PureBasic 6.41 beta 2 (Windows - x64)">
   <section name="config">
     <options closefiles="1" openmode="0" name="PB-PEArch"/>
   </section>
   <section name="data">
-    <explorer view="C:\ProgramData\PureBasic\Examples\" pattern="0"/>
+    <explorer view="..\..\..\ProgramData\PureBasic\Examples\" pattern="0"/>
     <log show="1"/>
-    <lastopen date="2026-08-10 23:03" user="Herwin" host="DESKTOP-QNI2QTI"/>
+    <lastopen date="2026-09-09 12:31" user="Herwin" host="DESKTOP-QNI2QTI"/>
   </section>
   <section name="files">
     <file name="Main_PEArch.pb">
-      <config load="0" scan="1" panel="1" warn="1" lastopen="1" sortindex="1" panelstate="+"/>
-      <fingerprint md5="9e56681a8a5f8b358cd0da84cf84bb55"/>
+      <config load="0" scan="1" panel="1" warn="1" lastopen="0" sortindex="999" panelstate="+"/>
+      <fingerprint md5="31c48ae4c63d90ae2e8ff7b017e93134"/>
     </file>
     <file name="Includes\ImageNtHeaderHelper.pbi">
       <config load="0" scan="1" panel="1" warn="1" lastopen="0" sortindex="999" panelstate="++"/>
-      <fingerprint md5="30a4ff6ed752b739cbd58ef364ad37d1"/>
+      <fingerprint md5="77d94a720352a7d1c0e30f4631a15e1b"/>
     </file>
     <file name="Includes\PB-Win32-GetConsoleProcessList\Includes\Win32_GetConsoleProcessList.pbi">
       <config load="0" scan="1" panel="1" warn="1" lastopen="0" sortindex="999" panelstate="++++"/>

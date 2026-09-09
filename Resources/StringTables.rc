@@ -9,7 +9,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_NEUTRAL
 STRINGTABLE
 BEGIN
   1000, "PEArch.exe [/?] [/E|/AsError] [/H|/AsHex] [/F|/FullText] <File>\n\nOptions:\n  /?             Prints this help text, and some additional details.\n  /E, /AsError   Gives out the result as an error code.\n  /H, /AsHex     Prints the architecture as a hex number.\n  /F, /FullText  Prints a longer description of the architecture."
-  1001, "\nError Codes:\n  Informative:\n   * 0  - No error\n  Fatal errors: (1-9)\n   * 1  - Console error\n   * 2  - Unknown error\n  IO errors: (10-19)\n   * 12 - Unable to open the file\n   * 13 - Cannot create a file mapping\n   * 14 - Cannot map the file into memory\n   * 15 - Unable to retrieve the NT headers\n  Launch arguments errors: (20-21)\n   * 20 - Unknown argument\n   * 21 - Missing file argument\n   * 22 - Too many file arguments\n  Application errors: (30-39)\n   * 30 - The architecture is unknown, '/AsHex' will bypass it"
+  1001, "\nError Codes:\n  Informative:\n   * 0  - No error\n  Fatal errors: (1-9)\n   * 1  - Console error\n   * 2  - Unknown error\n  IO errors: (10-19)\n   * 12 - Unable to open the file\n   * 13 - Cannot create a file mapping\n   * 14 - Cannot map the file into memory\n   * 15 - Unable to retrieve the NT headers\n   * 16 - Failed to allocate memory\n  Launch arguments errors: (20-21)\n   * 20 - Unknown argument\n   * 21 - Missing file argument\n   * 22 - Too many file arguments\n  Application errors: (30-39)\n   * 30 - The architecture is unknown, '/AsHex' will bypass it"
   1002, "\nArchitectures:"
   2000, "\nPress any key to continue..."
   4000, "UNKNOWN"
@@ -87,13 +87,20 @@ BEGIN
   5000, "Unknown argument: '{0}'"
   5001, "No file was given !"
   5002, "Too many files given !"
+  6000, "Unable to open the given file !"
+  6001, "Unable to create a file mapping !"
+  6002, "Unable map the file into memory !"
+  6003, "Unable to retrieve the NT headers !"
+  6004, "Failed to allocate memory !"
+  6010, "Unknown error while loading the file !"
+  6011, "Unknown error while retrieving the NT headers !"
 END
 
 LANGUAGE LANG_FRENCH, SUBLANG_NEUTRAL
 STRINGTABLE
 BEGIN
   1000, "PEArch.exe [/?] [/E|/AsError] [/H|/AsHex] [/F|/FullText] <Fichier>\n\nOptions:\n  /?             Affiche ce texte d'aide.\n  /E, /AsError   Retourne le code de l'architecture comme code d'erreur.\n  /H, /AsHex     Affiche le code de l'architecture en héxadécimal.\n  /F, /FullText  Affiche une description plus longue sur l'architecture."
-  1001, "\nCodes d'erreur:\n  Informations:\n   * 0  - Pas d'erreur\n  Erreurs fatales: (1-9)\n   * 1  - Ouverture du terminal impossible\n   * 2  - Erreur inconnue\n  Erreurs d'E/S : (10-19)\n   * 12 - Impossible d'ouvrir le fichier\n   * 13 - Impossible de créer un mappage de fichier\n   * 14 - Impossible de mapper le fichier en mémoire\n   * 15 - Impossible de récupérer les en-têtes NT\n  Erreurs d'arguments de lancement : (20-21)\n   * 20 - Argument inconnu\n   * 21 - Argument de fichier manquant\n   * 22 - Trop d'arguments de fichier\n  Erreurs d'application : (30-39)\n   * 30 - L'architecture est inconnue, '/AsHex' contournera cette erreur"
+  1001, "\nCodes d'erreur:\n  Informations:\n   * 0  - Pas d'erreur\n  Erreurs fatales: (1-9)\n   * 1  - Ouverture du terminal impossible\n   * 2  - Erreur inconnue\n  Erreurs d'E/S : (10-19)\n   * 12 - Impossible d'ouvrir le fichier\n   * 13 - Impossible de créer un mappage de fichier\n   * 14 - Impossible de mapper le fichier en mémoire\n   * 15 - Impossible de récupérer les en-têtes NT\n   * 16 - Impossible d'allouer de la mémoire\n  Erreurs d'arguments de lancement : (20-21)\n   * 20 - Argument inconnu\n   * 21 - Argument de fichier manquant\n   * 22 - Trop d'arguments de fichier\n  Erreurs d'application : (30-39)\n   * 30 - L'architecture est inconnue, '/AsHex' contournera cette erreur"
   1002, "\nArchitectures:"
   2000, "\nAppuyez sur une touche pour continuer..."
   4001, "Le contenu de ce champ est supposé pouvoir s'appliquer à n'importe quel type d'ordinateur"
@@ -135,6 +142,13 @@ BEGIN
   5000, "Option de lancement inconnue: '{0}'"
   5001, "Aucun fichier fourni !"
   5002, "Trop de fichiers fournis !"
+  6000, "Impossible d'ouvrir le fichier donné !"
+  6001, "Impossible de créer un mappage de fichier !"
+  6002, "Impossible de mapper le fichier en mémoire !"
+  6003, "Impossible de récupérer les en-têtes NT !"
+  6004, "Impossible d'allouer de la mémoire !"
+  6010, "Erreur inconnue lors du chargement du fichier !"
+  6011, "Erreur inconnue lors de la récupération des headers NT !"
 END
 
 // This is added after all the MessageTable

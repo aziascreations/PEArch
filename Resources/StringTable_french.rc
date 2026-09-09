@@ -9,7 +9,7 @@ LANGUAGE LANG_FRENCH, SUBLANG_NEUTRAL
 STRINGTABLE
 BEGIN
   1000, "PEArch.exe [/?] [/E|/AsError] [/H|/AsHex] [/F|/FullText] <Fichier>\n\nOptions:\n  /?             Affiche ce texte d'aide.\n  /E, /AsError   Retourne le code de l'architecture comme code d'erreur.\n  /H, /AsHex     Affiche le code de l'architecture en héxadécimal.\n  /F, /FullText  Affiche une description plus longue sur l'architecture."
-  1001, "\nCodes d'erreur:\n  Informations:\n   * 0  - Pas d'erreur\n  Erreurs fatales: (1-9)\n   * 1  - Ouverture du terminal impossible\n   * 2  - Erreur inconnue\n  Erreurs d'E/S : (10-19)\n   * 12 - Impossible d'ouvrir le fichier\n   * 13 - Impossible de créer un mappage de fichier\n   * 14 - Impossible de mapper le fichier en mémoire\n   * 15 - Impossible de récupérer les en-têtes NT\n  Erreurs d'arguments de lancement : (20-21)\n   * 20 - Argument inconnu\n   * 21 - Argument de fichier manquant\n   * 22 - Trop d'arguments de fichier\n  Erreurs d'application : (30-39)\n   * 30 - L'architecture est inconnue, '/AsHex' contournera cette erreur"
+  1001, "\nCodes d'erreur:\n  Informations:\n   * 0  - Pas d'erreur\n  Erreurs fatales: (1-9)\n   * 1  - Ouverture du terminal impossible\n   * 2  - Erreur inconnue\n  Erreurs d'E/S : (10-19)\n   * 12 - Impossible d'ouvrir le fichier\n   * 13 - Impossible de créer un mappage de fichier\n   * 14 - Impossible de mapper le fichier en mémoire\n   * 15 - Impossible de récupérer les en-têtes NT\n   * 16 - Impossible d'allouer de la mémoire\n  Erreurs d'arguments de lancement : (20-21)\n   * 20 - Argument inconnu\n   * 21 - Argument de fichier manquant\n   * 22 - Trop d'arguments de fichier\n  Erreurs d'application : (30-39)\n   * 30 - L'architecture est inconnue, '/AsHex' contournera cette erreur"
   1002, "\nArchitectures:"
   2000, "\nAppuyez sur une touche pour continuer..."
   4001, "Le contenu de ce champ est supposé pouvoir s'appliquer à n'importe quel type d'ordinateur"
@@ -51,6 +51,13 @@ BEGIN
   5000, "Option de lancement inconnue: '{0}'"
   5001, "Aucun fichier fourni !"
   5002, "Trop de fichiers fournis !"
+  6000, "Impossible d'ouvrir le fichier donné !"
+  6001, "Impossible de créer un mappage de fichier !"
+  6002, "Impossible de mapper le fichier en mémoire !"
+  6003, "Impossible de récupérer les en-têtes NT !"
+  6004, "Impossible d'allouer de la mémoire !"
+  6010, "Erreur inconnue lors du chargement du fichier !"
+  6011, "Erreur inconnue lors de la récupération des headers NT !"
   4000, "UNKNOWN"
   4002, "ALPHA"
   4004, "ALPHA64"
