@@ -5,10 +5,10 @@
 ;   Author: Herwin Bozet (NibblePoker)
 ;
 ; ==- Compatibility -=============================
-;  Compiler version:
+;  Tested compiler version:
 ;    * PureBasic 5.73 LTS (x86/x64)
-;    * PureBasic 6.21 LTS (x86/x64)
-;    * PureBasic 6.21 LTS - C Backend (x86/x64/arm64)
+;    * PureBasic 6.21 (x86/x64)
+;    * PureBasic 6.21 C Backend (arm64)
 ; 
 ; ==- Links & License -===========================
 ;  License: CC0 1.0 Universal (Public Domain)
